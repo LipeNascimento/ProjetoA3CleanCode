@@ -1,9 +1,8 @@
 package controller;
 
-import model.Harvest;
-
 import java.util.HashMap;
 import java.util.Map;
+import model.Harvest;
 
 public class InventoryController {
     private HarvestController harvestController;
@@ -51,4 +50,9 @@ public class InventoryController {
     public Map<String, Double> getProductQuantities() {
         return inventory;
     }
+
+    public Map<String, Double> getInventory() {
+        return inventory;
+    }
+
 }

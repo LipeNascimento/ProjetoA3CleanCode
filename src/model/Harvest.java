@@ -48,4 +48,10 @@ public class Harvest {
         return String.format("Capacidade: %.2f\nTipo de Plantio: %s\nCondições Climáticas: %s\nQuantidade Produzida: %.2f\nData da Colheita: %s\nPreço por Unidade: R$ %.2f", 
                               capacity, plantingType, weatherConditions, quantityProduced, dateFormat.format(harvestDate), unitPrice);
     }
+
+    // Construtor adicional para simplificação no painel de cadastro
+    public Harvest(double capacity, String plantingType, Date harvestDate) {
+        this(capacity, plantingType, "Não informado", capacity, harvestDate, 0.0);
+    }
+
 }
