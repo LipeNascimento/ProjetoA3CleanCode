@@ -4,6 +4,7 @@ package view;
 import controller.InventoryController;
 
 import javax.swing.*;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,8 +23,8 @@ public class InventoryViewPanel extends JPanel {
         JPanel topPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         final JTextField productField = new JTextField();
         final JTextField quantityField = new JTextField();
-        JButton addButton = new JButton("Adicionar");
-        JButton removeButton = new JButton("Remover");
+        JButton addButton = new JButton("Adicionar", UIManager.getIcon("OptionPane.informationIcon"));
+        JButton removeButton = new JButton("Remover", UIManager.getIcon("OptionPane.errorIcon"));
         final JLabel statusLabel = new JLabel(" ");
 
         topPanel.setBorder(BorderFactory.createTitledBorder("Movimentar Produto"));

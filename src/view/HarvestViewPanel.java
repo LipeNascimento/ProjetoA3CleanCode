@@ -5,6 +5,7 @@ import controller.HarvestController;
 import model.Harvest;
 
 import javax.swing.*;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +26,7 @@ public class HarvestViewPanel extends JPanel {
         final JTextField capacityField = new JTextField();
         final JTextField plantingTypeField = new JTextField();
         final JTextField harvestDateField = new JTextField();
-        JButton saveButton = new JButton("Salvar Colheita");
+        JButton saveButton = new JButton("Salvar Colheita", UIManager.getIcon("FileView.floppyDriveIcon"));
         final JLabel statusLabel = new JLabel(" ");
 
         formPanel.setBorder(BorderFactory.createTitledBorder("Nova Colheita"));

@@ -4,7 +4,6 @@ package view;
 import controller.FarmController;
 import controller.HarvestController;
 import controller.InventoryController;
-
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
@@ -21,9 +20,11 @@ public class MainFrame extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("Fazendas", new FarmViewPanel(farmController));
-        tabbedPane.addTab("Colheitas", new HarvestViewPanel(harvestController));
-        tabbedPane.addTab("Estoque", new InventoryViewPanel(inventoryController));
+        tabbedPane.addTab("🏡 Fazendas", new ImageIcon(((ImageIcon) UIManager.getIcon("FileView.directoryIcon")).getImage()), new FarmViewPanel(farmController), "Gerenciar Fazendas");
+        Icon folderIcon = UIManager.getIcon("FileChooser.newFolderIcon");
+        tabbedPane.addTab("🌾 Colheitas", new ImageIcon(((ImageIcon) folderIcon).getImage()), new HarvestViewPanel(harvestController), "Registrar Colheitas");
+        Icon fileIcon = UIManager.getIcon("FileView.fileIcon");
+        tabbedPane.addTab("📦 Estoque", new ImageIcon(((ImageIcon) fileIcon).getImage()), new InventoryViewPanel(inventoryController), "Gerenciar Estoque");
 
         add(tabbedPane);
         setVisible(true);

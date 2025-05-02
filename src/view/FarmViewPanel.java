@@ -5,6 +5,7 @@ import controller.FarmController;
 import model.Farm;
 
 import javax.swing.*;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,7 +27,7 @@ public class FarmViewPanel extends JPanel {
         final JTextField plantingTypeField = new JTextField();
         final JTextField cultivationAreaField = new JTextField();
         final JLabel statusLabel = new JLabel(" ");
-        JButton saveButton = new JButton("Salvar Fazenda");
+        JButton saveButton = new JButton("Salvar Fazenda", UIManager.getIcon("FileView.floppyDriveIcon"));
 
         formPanel.setBorder(BorderFactory.createTitledBorder("Nova Fazenda"));
         formPanel.add(new JLabel("Nome:")); formPanel.add(nameField);
