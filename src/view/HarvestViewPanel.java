@@ -1,75 +1,65 @@
-
 package view;
 
 import controller.HarvestController;
 import model.Harvest;
 
 import javax.swing.*;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 public class HarvestViewPanel extends JPanel {
+    private JTextField cropNameField, farmIdField, quantityField, dateField;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private HarvestController harvestController;
 
-    private final HarvestController controller;
-    private final DefaultTableModel tableModel;
+    public HarvestViewPanel(HarvestController harvestController) {
+        this.harvestController = harvestController;
+        setLayout(new BorderLayout());
 
-    public HarvestViewPanel(HarvestController controller) {
-        this.controller = controller;
-        setLayout(new BorderLayout(10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(5, 2));
+        cropNameField = new JTextField();
+        farmIdField = new JTextField();
+        quantityField = new JTextField();
+        dateField = new JTextField();
+        JButton saveButton = new JButton("Salvar Colheita");
 
-        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
-        final JTextField capacityField = new JTextField();
-        final JTextField plantingTypeField = new JTextField();
-        final JTextField harvestDateField = new JTextField();
-        JButton saveButton = new JButton("Salvar Colheita", UIManager.getIcon("FileView.floppyDriveIcon"));
-        final JLabel statusLabel = new JLabel(" ");
-
-        formPanel.setBorder(BorderFactory.createTitledBorder("Nova Colheita"));
-        formPanel.add(new JLabel("Capacidade (kg):")); formPanel.add(capacityField);
-        formPanel.add(new JLabel("Tipo de Plantio:")); formPanel.add(plantingTypeField);
-        formPanel.add(new JLabel("Data da Colheita (dd/MM/yyyy):")); formPanel.add(harvestDateField);
-        formPanel.add(saveButton); formPanel.add(statusLabel);
-
-        String[] columnNames = {"Tipo de Plantio", "Capacidade (kg)", "Data"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        JTable harvestTable = new JTable(tableModel);
-        JScrollPane tableScrollPane = new JScrollPane(harvestTable);
+        formPanel.add(new JLabel("Tipo de Plantio:"));
+        formPanel.add(cropNameField);
+        formPanel.add(new JLabel("ID da Fazenda:"));
+        formPanel.add(farmIdField);
+        formPanel.add(new JLabel("Quantidade:"));
+        formPanel.add(quantityField);
+        formPanel.add(new JLabel("Data:"));
+        formPanel.add(dateField);
+        formPanel.add(new JLabel(""));
+        formPanel.add(saveButton);
 
         add(formPanel, BorderLayout.NORTH);
-        add(tableScrollPane, BorderLayout.CENTER);
 
-        saveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    double capacity = Double.parseDouble(capacityField.getText());
-                    String plantingType = plantingTypeField.getText();
-                    String dateStr = harvestDateField.getText();
+        tableModel = new DefaultTableModel(new Object[]{"ID", "Plantio", "Fazenda", "Quantidade", "Data"}, 0);
+        table = new JTable(tableModel);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
-                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateStr);
+        saveButton.addActionListener(e -> {
+            String cropName = cropNameField.getText();
+            int farmId = Integer.parseInt(farmIdField.getText());
+            int quantity = Integer.parseInt(quantityField.getText());
+            String date = dateField.getText();
 
-                    if (plantingType.isEmpty()) {
-                        statusLabel.setText("Preencha todos os campos.");
-                        return;
-                    }
-
-                    Harvest harvest = new Harvest(capacity, plantingType, date);
-                    controller.addHarvest(harvest);
-                    tableModel.addRow(new Object[]{plantingType, capacity, dateStr});
-                    statusLabel.setText("Colheita registrada.");
-
-                    capacityField.setText("");
-                    plantingTypeField.setText("");
-                    harvestDateField.setText("");
-
-                } catch (Exception ex) {
-                    statusLabel.setText("Dados inválidos.");
-                }
-            }
+            harvestController.addHarvest(cropName, farmId, quantity, date);
+            updateTable();
         });
+
+        updateTable();
+    }
+
+    private void updateTable() {
+        List<Harvest> harvests = harvestController.getAllHarvests();
+        tableModel.setRowCount(0);
+        for (Harvest h : harvests) {
+            tableModel.addRow(new Object[]{h.getId(), h.getCropName(), h.getFarmId(), h.getQuantity(), h.getDate()});
+        }
     }
 }

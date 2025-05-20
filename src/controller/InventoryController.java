@@ -1,70 +1,47 @@
-
 package controller;
 
-import model.Harvest;
+import model.DatabaseConnection;
+import model.Inventory;
 
-import javax.swing.JOptionPane;
-import java.util.HashMap;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class InventoryController {
 
-    private HarvestController harvestController;
-    private Map<String, Double> inventory = new HashMap<>();
-    private Map<String, Double> productValues = new HashMap<>();
+    public void addInventory(String itemName, int quantity, String unit) {
+        String sql = "INSERT INTO inventory (item_name, quantity, unit) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public InventoryController(HarvestController harvestController) {
-        this.harvestController = harvestController;
+            stmt.setString(1, itemName);
+            stmt.setInt(2, quantity);
+            stmt.setString(3, unit);
+            stmt.executeUpdate();
+            System.out.println("Item de estoque adicionado com sucesso.");
+        } catch (SQLException e) {
+            System.out.println("Erro ao adicionar item de estoque: " + e.getMessage());
+        }
     }
 
-    public void addProduct(String plantingType, double quantity) {
-        if (quantity <= 0) {
-            JOptionPane.showMessageDialog(null, "A quantidade deve ser maior que zero.");
-            return;
-        }
+    public List<Inventory> getAllInventory() {
+        List<Inventory> items = new ArrayList<>();
+        String sql = "SELECT * FROM inventory";
+        try (Connection conn = DatabaseConnection.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-        List<Harvest> harvests = harvestController.getHarvests();
-        Harvest harvest = null;
-
-        for (Harvest h : harvests) {
-            if (h.getPlantingType().equalsIgnoreCase(plantingType)) {
-                harvest = h;
-                break;
+            while (rs.next()) {
+                items.add(new Inventory(
+                        rs.getInt("id"),
+                        rs.getString("item_name"),
+                        rs.getInt("quantity"),
+                        rs.getString("unit")
+                ));
             }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar itens de estoque: " + e.getMessage());
         }
-
-        if (harvest == null) {
-            JOptionPane.showMessageDialog(null, "Não há colheita registrada para o tipo: " + plantingType);
-            return;
-        }
-
-        if (harvest.getRemainingQuantity() < quantity) {
-            JOptionPane.showMessageDialog(null, "Quantidade insuficiente na colheita.\nDisponível: " + harvest.getRemainingQuantity() + " kg");
-            return;
-        }
-
-        harvest.reduceQuantity(quantity);
-        inventory.put(plantingType, inventory.getOrDefault(plantingType, 0.0) + quantity);
-        productValues.put(plantingType, harvest.getUnitPrice());
-    }
-
-    public void removeProduct(String plantingType, double quantity) {
-        if (!inventory.containsKey(plantingType)) {
-            JOptionPane.showMessageDialog(null, "Produto não existe no estoque.");
-            return;
-        }
-
-        double current = inventory.get(plantingType);
-        if (quantity > current) {
-            JOptionPane.showMessageDialog(null, "Quantidade insuficiente no estoque.\nDisponível: " + current + " kg");
-            return;
-        }
-
-        inventory.put(plantingType, current - quantity);
-    }
-
-    public Map<String, Double> getInventory() {
-        return inventory;
+        return items;
     }
 }

@@ -1,31 +1,31 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Inventory {
-    private List<String> products;
+    private int id;
+    private String itemName;
+    private int quantity;
+    private String unit;
 
-    public Inventory() {
-        this.products = new ArrayList<>();
+    public Inventory(int id, String itemName, int quantity, String unit) {
+        this.id = id;
+        this.itemName = itemName;
+        this.quantity = quantity;
+        this.unit = unit;
     }
 
-    public void addProduct(String product) {
-        products.add(product);
+    public int getId() {
+        return id;
     }
 
-    public void removeProduct(String product) {
-        products.remove(product);
+    public String getItemName() {
+        return itemName;
     }
 
-    public List<String> getProducts() {
-        return products;
+    public int getQuantity() {
+        return quantity;
     }
 
-    @Override
-    public String toString() {
-        return "Inventory{" +
-                "products=" + products +
-                '}';
+    public String getUnit() {
+        return unit;
     }
 }

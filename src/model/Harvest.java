@@ -1,57 +1,37 @@
 package model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Harvest {
-    private double capacity;
-    private String plantingType;
-    private String weatherConditions;
-    private double quantityProduced;
-    private Date harvestDate;
-    private double unitPrice;
-    private double remainingQuantity;
+    private int id;
+    private String cropName;
+    private int farmId;
+    private int quantity;
+    private String date;
 
-    public Harvest(double capacity, String plantingType, String weatherConditions, double quantityProduced, Date harvestDate, double unitPrice) {
-        this.capacity = capacity;
-        this.plantingType = plantingType;
-        this.weatherConditions = weatherConditions;
-        this.quantityProduced = quantityProduced;
-        this.harvestDate = harvestDate;
-        this.unitPrice = unitPrice;
-        this.remainingQuantity = quantityProduced;
+    public Harvest(int id, String cropName, int farmId, int quantity, String date) {
+        this.id = id;
+        this.cropName = cropName;
+        this.farmId = farmId;
+        this.quantity = quantity;
+        this.date = date;
     }
 
-    public String getPlantingType() {
-        return plantingType;
+    public int getId() {
+        return id;
     }
 
-    public double getRemainingQuantity() {
-        return remainingQuantity;
+    public String getCropName() {
+        return cropName;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
+    public int getFarmId() {
+        return farmId;
     }
 
-    public void reduceQuantity(double quantity) {
-        if (quantity <= remainingQuantity) {
-            remainingQuantity -= quantity;
-        } else {
-            throw new IllegalArgumentException("Quantidade insuficiente na colheita.");
-        }
+    public int getQuantity() {
+        return quantity;
     }
 
-    @Override
-    public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return String.format("Capacidade: %.2f\nTipo de Plantio: %s\nCondições Climáticas: %s\nQuantidade Produzida: %.2f\nData da Colheita: %s\nPreço por Unidade: R$ %.2f", 
-                              capacity, plantingType, weatherConditions, quantityProduced, dateFormat.format(harvestDate), unitPrice);
+    public String getDate() {
+        return date;
     }
-
-    // Construtor adicional para simplificação no painel de cadastro
-    public Harvest(double capacity, String plantingType, Date harvestDate) {
-        this(capacity, plantingType, "Não informado", capacity, harvestDate, 0.0);
-    }
-
 }

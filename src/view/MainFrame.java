@@ -9,16 +9,17 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
 
     public MainFrame() {
+        model.DatabaseInitializer.initialize();
         setTitle("Sistema de Gestão Agrícola - SmartFarm");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 450);
         setLocationRelativeTo(null);
 
-        FarmController farmController = new FarmController();
-        HarvestController harvestController = new HarvestController();
-        InventoryController inventoryController = new InventoryController(harvestController);
+        final FarmController farmController = new FarmController();
+        final HarvestController harvestController = new HarvestController();
+        final InventoryController inventoryController = new InventoryController();
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+        final JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("🏡 Fazendas", new ImageIcon(((ImageIcon) UIManager.getIcon("FileView.directoryIcon")).getImage()), new FarmViewPanel(farmController), "Gerenciar Fazendas");
         Icon folderIcon = UIManager.getIcon("FileChooser.newFolderIcon");

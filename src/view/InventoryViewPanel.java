@@ -1,85 +1,61 @@
-
 package view;
 
 import controller.InventoryController;
+import model.Inventory;
 
 import javax.swing.*;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Map;
+import java.util.List;
 
 public class InventoryViewPanel extends JPanel {
+    private JTextField itemNameField, quantityField, unitField;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private InventoryController inventoryController;
 
-    private final InventoryController controller;
-    private final DefaultTableModel tableModel;
+    public InventoryViewPanel(InventoryController inventoryController) {
+        this.inventoryController = inventoryController;
+        setLayout(new BorderLayout());
 
-    public InventoryViewPanel(InventoryController controller) {
-        this.controller = controller;
-        setLayout(new BorderLayout(10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(4, 2));
+        itemNameField = new JTextField();
+        quantityField = new JTextField();
+        unitField = new JTextField();
+        JButton saveButton = new JButton("Salvar Item");
 
-        JPanel topPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-        final JTextField productField = new JTextField();
-        final JTextField quantityField = new JTextField();
-        JButton addButton = new JButton("Adicionar", UIManager.getIcon("OptionPane.informationIcon"));
-        JButton removeButton = new JButton("Remover", UIManager.getIcon("OptionPane.errorIcon"));
-        final JLabel statusLabel = new JLabel(" ");
+        formPanel.add(new JLabel("Item:"));
+        formPanel.add(itemNameField);
+        formPanel.add(new JLabel("Quantidade:"));
+        formPanel.add(quantityField);
+        formPanel.add(new JLabel("Unidade:"));
+        formPanel.add(unitField);
+        formPanel.add(new JLabel(""));
+        formPanel.add(saveButton);
 
-        topPanel.setBorder(BorderFactory.createTitledBorder("Movimentar Produto"));
-        topPanel.add(new JLabel("Produto:")); topPanel.add(productField);
-        topPanel.add(new JLabel("Quantidade:")); topPanel.add(quantityField);
-        topPanel.add(addButton); topPanel.add(removeButton);
+        add(formPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Produto", "Quantidade (kg)"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        JTable inventoryTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(inventoryTable);
+        tableModel = new DefaultTableModel(new Object[]{"ID", "Item", "Quantidade", "Unidade"}, 0);
+        table = new JTable(tableModel);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
-        add(topPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-        add(statusLabel, BorderLayout.SOUTH);
+        saveButton.addActionListener(e -> {
+            String itemName = itemNameField.getText();
+            int quantity = Integer.parseInt(quantityField.getText());
+            String unit = unitField.getText();
 
-        refreshTable();
+            inventoryController.addInventory(itemName, quantity, unit);
+            updateTable();
+        });
 
-        ActionListener handler = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String produto = productField.getText();
-                String qtdeTxt = quantityField.getText();
-
-                try {
-                    double qtde = Double.parseDouble(qtdeTxt);
-                    if (qtde <= 0 || produto.isEmpty()) {
-                        statusLabel.setText("Preencha os campos corretamente.");
-                        return;
-                    }
-
-                    if (e.getSource() == addButton) {
-                        controller.addProduct(produto, qtde);
-                    } else {
-                        controller.removeProduct(produto, qtde);
-                    }
-
-                    refreshTable();
-                    statusLabel.setText("Movimentação registrada.");
-                    productField.setText("");
-                    quantityField.setText("");
-
-                } catch (NumberFormatException ex) {
-                    statusLabel.setText("Quantidade inválida.");
-                }
-            }
-        };
-
-        addButton.addActionListener(handler);
-        removeButton.addActionListener(handler);
+        updateTable();
     }
 
-    private void refreshTable() {
-        tableModel.setRowCount(0); // Limpar tabela
-        for (Map.Entry<String, Double> entry : controller.getInventory().entrySet()) {
-            tableModel.addRow(new Object[]{entry.getKey(), entry.getValue()});
+    private void updateTable() {
+        List<Inventory> items = inventoryController.getAllInventory();
+        tableModel.setRowCount(0);
+        for (Inventory i : items) {
+            tableModel.addRow(new Object[]{i.getId(), i.getItemName(), i.getQuantity(), i.getUnit()});
         }
     }
 }

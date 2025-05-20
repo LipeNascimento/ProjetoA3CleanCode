@@ -1,38 +1,25 @@
 package model;
 
 public class Farm {
+    private int id;
     private String name;
-    private String address;
-    private String plantingType;
-    private double cultivationArea;
+    private String location;
 
-    public Farm(String name, String address, String plantingType, double cultivationArea) {
+    public Farm(int id, String name, String location) {
+        this.id = id;
         this.name = name;
-        this.address = address;
-        this.plantingType = plantingType;
-        this.cultivationArea = cultivationArea;
+        this.location = location;
     }
 
-    // Getters and setters
+    public int getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getPlantingType() {
-        return plantingType;
-    }
-
-    public double getCultivationArea() {
-        return cultivationArea;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Fazenda: %s\nEndereço: %s\nTipo de Plantio: %s\nÁrea de Cultivo: %.2f metros quadrados", 
-                              name, address, plantingType, cultivationArea);
+    public String getLocation() {
+        return location;
     }
 }
