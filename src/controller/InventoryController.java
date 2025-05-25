@@ -18,9 +18,8 @@ public class InventoryController {
             stmt.setInt(2, quantity);
             stmt.setString(3, unit);
             stmt.executeUpdate();
-            System.out.println("Item de estoque adicionado com sucesso.");
         } catch (SQLException e) {
-            System.out.println("Erro ao adicionar item de estoque: " + e.getMessage());
+            System.out.println("Erro ao adicionar item: " + e.getMessage());
         }
     }
 
@@ -40,8 +39,35 @@ public class InventoryController {
                 ));
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao buscar itens de estoque: " + e.getMessage());
+            System.out.println("Erro ao buscar itens: " + e.getMessage());
         }
         return items;
+    }
+
+    public void updateInventory(int id, String itemName, int quantity, String unit) {
+        String sql = "UPDATE inventory SET item_name = ?, quantity = ?, unit = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, itemName);
+            stmt.setInt(2, quantity);
+            stmt.setString(3, unit);
+            stmt.setInt(4, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar item: " + e.getMessage());
+        }
+    }
+
+    public void deleteInventory(int id) {
+        String sql = "DELETE FROM inventory WHERE id = ?";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir item: " + e.getMessage());
+        }
     }
 }

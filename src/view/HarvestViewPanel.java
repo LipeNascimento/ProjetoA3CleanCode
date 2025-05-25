@@ -9,21 +9,23 @@ import java.awt.*;
 import java.util.List;
 
 public class HarvestViewPanel extends JPanel {
-    private JTextField cropNameField, farmIdField, quantityField, dateField;
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private HarvestController harvestController;
+    private final JTextField cropNameField, farmIdField, quantityField, dateField;
+    private final JTable table;
+    private final DefaultTableModel tableModel;
+    private final HarvestController harvestController;
 
     public HarvestViewPanel(HarvestController harvestController) {
         this.harvestController = harvestController;
         setLayout(new BorderLayout());
 
-        JPanel formPanel = new JPanel(new GridLayout(5, 2));
+        JPanel formPanel = new JPanel(new GridLayout(6, 2));
         cropNameField = new JTextField();
         farmIdField = new JTextField();
         quantityField = new JTextField();
         dateField = new JTextField();
         JButton saveButton = new JButton("Salvar Colheita");
+        JButton editButton = new JButton("Editar");
+        JButton deleteButton = new JButton("Excluir");
 
         formPanel.add(new JLabel("Tipo de Plantio:"));
         formPanel.add(cropNameField);
@@ -33,8 +35,9 @@ public class HarvestViewPanel extends JPanel {
         formPanel.add(quantityField);
         formPanel.add(new JLabel("Data:"));
         formPanel.add(dateField);
-        formPanel.add(new JLabel(""));
         formPanel.add(saveButton);
+        formPanel.add(editButton);
+        formPanel.add(deleteButton);
 
         add(formPanel, BorderLayout.NORTH);
 
@@ -43,13 +46,37 @@ public class HarvestViewPanel extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         saveButton.addActionListener(e -> {
-            String cropName = cropNameField.getText();
-            int farmId = Integer.parseInt(farmIdField.getText());
-            int quantity = Integer.parseInt(quantityField.getText());
-            String date = dateField.getText();
-
-            harvestController.addHarvest(cropName, farmId, quantity, date);
+            harvestController.addHarvest(
+                cropNameField.getText(),
+                Integer.parseInt(farmIdField.getText()),
+                Integer.parseInt(quantityField.getText()),
+                dateField.getText()
+            );
             updateTable();
+        });
+
+        editButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) tableModel.getValueAt(selectedRow, 0);
+                harvestController.updateHarvest(
+                    id,
+                    cropNameField.getText(),
+                    Integer.parseInt(farmIdField.getText()),
+                    Integer.parseInt(quantityField.getText()),
+                    dateField.getText()
+                );
+                updateTable();
+            }
+        });
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) tableModel.getValueAt(selectedRow, 0);
+                harvestController.deleteHarvest(id);
+                updateTable();
+            }
         });
 
         updateTable();

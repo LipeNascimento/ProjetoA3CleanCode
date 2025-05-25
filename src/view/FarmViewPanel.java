@@ -9,33 +9,35 @@ import java.awt.*;
 import java.util.List;
 
 public class FarmViewPanel extends JPanel {
-    private JTextField nameField, locationField;
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private FarmController farmController;
+    private final JTextField nameField, locationField;
+    private final JTable table;
+    private final DefaultTableModel tableModel;
+    private final FarmController farmController;
 
     public FarmViewPanel(FarmController farmController) {
         this.farmController = farmController;
         setLayout(new BorderLayout());
 
-        JPanel formPanel = new JPanel(new GridLayout(3, 2));
+        JPanel formPanel = new JPanel(new GridLayout(4, 2));
         nameField = new JTextField();
         locationField = new JTextField();
         JButton saveButton = new JButton("Salvar Fazenda");
+        JButton editButton = new JButton("Editar");
+        JButton deleteButton = new JButton("Excluir");
 
         formPanel.add(new JLabel("Nome:"));
         formPanel.add(nameField);
         formPanel.add(new JLabel("Endereço:"));
         formPanel.add(locationField);
-        formPanel.add(new JLabel(""));
         formPanel.add(saveButton);
+        formPanel.add(editButton);
+        formPanel.add(deleteButton);
 
         add(formPanel, BorderLayout.NORTH);
 
         tableModel = new DefaultTableModel(new Object[]{"ID", "Nome", "Endereço"}, 0);
         table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
         saveButton.addActionListener(e -> {
             String name = nameField.getText();
@@ -47,6 +49,26 @@ public class FarmViewPanel extends JPanel {
                 locationField.setText("");
             } else {
                 JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            }
+        });
+
+        editButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) tableModel.getValueAt(selectedRow, 0);
+                String name = nameField.getText();
+                String location = locationField.getText();
+                farmController.updateFarm(id, name, location);
+                updateTable();
+            }
+        });
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int id = (int) tableModel.getValueAt(selectedRow, 0);
+                farmController.deleteFarm(id);
+                updateTable();
             }
         });
 

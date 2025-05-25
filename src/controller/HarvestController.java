@@ -19,7 +19,6 @@ public class HarvestController {
             stmt.setInt(3, quantity);
             stmt.setString(4, date);
             stmt.executeUpdate();
-            System.out.println("Colheita registrada com sucesso.");
         } catch (SQLException e) {
             System.out.println("Erro ao registrar colheita: " + e.getMessage());
         }
@@ -45,5 +44,33 @@ public class HarvestController {
             System.out.println("Erro ao buscar colheitas: " + e.getMessage());
         }
         return harvests;
+    }
+
+    public void updateHarvest(int id, String cropName, int farmId, int quantity, String date) {
+        String sql = "UPDATE harvest SET crop_name = ?, farm_id = ?, quantity = ?, date = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cropName);
+            stmt.setInt(2, farmId);
+            stmt.setInt(3, quantity);
+            stmt.setString(4, date);
+            stmt.setInt(5, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar colheita: " + e.getMessage());
+        }
+    }
+
+    public void deleteHarvest(int id) {
+        String sql = "DELETE FROM harvest WHERE id = ?";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao excluir colheita: " + e.getMessage());
+        }
     }
 }
