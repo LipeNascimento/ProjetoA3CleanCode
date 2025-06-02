@@ -103,7 +103,9 @@ Com foco em melhorar qualidade, organização e robustez do código do projeto o
 
 ## 📸 Vídeo do Projeto
 
-🔗 [Assistir ao vídeo no YouTube](https://www.youtube.com/watch?v=WINOhitWCps)
+🔗 [Assista o vídeo no YouTube](https://www.youtube.com/watch?v=WINOhitWCps)
+
+🔗 [Link da Apresentação em Slides](https://xn--apresentaoa3-bcb9c.my.canva.site/)
 
 ---
 
